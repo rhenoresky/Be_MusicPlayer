@@ -61,13 +61,13 @@ class SongService {
       values: [id],
     };
 
-    const result = await this._pool.query(query);
+    const {rows, rowCount} = await this._pool.query(query);
 
-    if (!result.rowCount) {
+    if (!rowCount) {
       throw new NotFoundError('Lagu tidak ditemukan');
     }
 
-    return result.rows.map(mapDBToModelSong)[0];
+    return rows.map(mapDBToModelSong)[0];
   }
 
   async editSongById(id, {title, year, performer, genre, duration, albumId}) {
