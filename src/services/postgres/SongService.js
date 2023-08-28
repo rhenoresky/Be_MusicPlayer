@@ -1,8 +1,8 @@
 const {Pool} = require('pg');
 const {nanoid} = require('nanoid');
-const InvariantError = require('../exceptions/InvariantError');
-const {mapDBToModelSong} = require('../utils');
-const NotFoundError = require('../exceptions/NotFoundError');
+const InvariantError = require('../../exceptions/InvariantError');
+const {mapDBToModelSong} = require('../../utils');
+const NotFoundError = require('../../exceptions/NotFoundError');
 
 class SongService {
   constructor() {
@@ -27,32 +27,41 @@ class SongService {
     return result.rows[0].id;
   }
 
-  async getSongs(title, performer) {
-    if (title && performer) {
-      const query = {
-        text: 'SELECT id, title, performer FROM songs WHERE title ILIKE $1 AND performer ILIKE $2',
-        values: [`%${title}%`, `%${performer}%`],
-      };
+  // async getSongs(title, performer) {
+  //   if (title && performer) {
+  //     const query = {
+  //       text: 'SELECT id, title, performer FROM songs WHERE title ILIKE $1 AND performer ILIKE $2',
+  //       values: [`%${title}%`, `%${performer}%`],
+  //     };
 
-      const result = await this._pool.query(query);
+  //     const result = await this._pool.query(query);
 
-      return result.rows;
-    }
+  //     return result.rows;
+  //   }
 
-    if (title || performer) {
-      const query = {
-        text: 'SELECT id, title, performer FROM songs WHERE title ILIKE $1 OR performer ILIKE $2',
-        values: [`%${title}%`, `%${performer}%`],
-      };
+  //   if (title || performer) {
+  //     const query = {
+  //       text: 'SELECT id, title, performer FROM songs WHERE title ILIKE $1 OR performer ILIKE $2',
+  //       values: [`%${title}%`, `%${performer}%`],
+  //     };
 
-      const result = await this._pool.query(query);
+  //     const result = await this._pool.query(query);
 
-      return result.rows;
-    }
+  //     return result.rows;
+  //   }
 
-    const result = await this._pool.query('SELECT id, title, performer FROM songs');
+  //   const result = await this._pool.query('SELECT id, title, performer FROM songs');
 
-    return result.rows;
+  //   return result.rows;
+  // }
+
+  async getSongs(title = '', performer = '') {
+    const query = {
+      text: 'SELECT id, title, performer FROM songs WHERE title ILIKE $1 AND performer ILIKE $2',
+      values: [`%${title}%`, `%${performer}%`],
+    };
+    const {rows} = await this._pool.query(query);
+    return rows;
   }
 
   async getSongById(id) {
