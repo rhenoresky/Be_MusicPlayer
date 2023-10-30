@@ -27,6 +27,19 @@ class SongService {
     return result.rows[0].id;
   }
 
+  async editFileSong(url, id) {
+    const query = {
+      text: 'UPDATE songs SET file = $1 WHERE id = $2 RETURNING id',
+      values: [url, id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Gagal memperbarui lagu. Id tidak ditemukan.');
+    }
+  }
+
   // async getSongs(title, performer) {
   //   if (title && performer) {
   //     const query = {
@@ -57,7 +70,7 @@ class SongService {
 
   async getSongs(title = '', performer = '') {
     const query = {
-      text: 'SELECT id, title, performer FROM songs WHERE title ILIKE $1 AND performer ILIKE $2',
+      text: 'SELECT * FROM songs WHERE title ILIKE $1 AND performer ILIKE $2',
       values: [`%${title}%`, `%${performer}%`],
     };
     const {rows} = await this._pool.query(query);

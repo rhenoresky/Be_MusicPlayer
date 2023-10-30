@@ -8,6 +8,11 @@ const SongPayloadSchema = Joi.object({
   performer: Joi.string().required(),
   duration: Joi.number(),
   albumId: Joi.string(),
+  song: Joi.allow(),
 });
 
-module.exports = {SongPayloadSchema};
+const SongFileHeadersSchema = Joi.object({
+  'content-type': Joi.string().valid('audio/mpeg', 'audio/vorbis').required(),
+}).unknown();
+
+module.exports = {SongPayloadSchema, SongFileHeadersSchema};

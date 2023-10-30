@@ -39,6 +39,7 @@ const init = async () => {
   const collaborationsService = new CollaborationsService(cacheService);
   const playlistsService = new PlaylistsService(collaborationsService, cacheService);
   const storageService = new StorageService(path.resolve(__dirname, 'api/album/file/covers'));
+  const storageServiceSong = new StorageService(path.resolve(__dirname, 'api/song/file/songs'));
   const server = Hapi.server({
     port: config.app.port,
     host: config.app.host,
@@ -88,6 +89,7 @@ const init = async () => {
       options: {
         service: songsService,
         validator: SongValidator,
+        storageServiceSong,
       },
     },
     {

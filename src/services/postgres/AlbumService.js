@@ -29,6 +29,11 @@ class AlbumService {
     return result.rows[0].id;
   }
 
+  async getAlbums() {
+    const {rows} = await this._pool.query('SELECT id, name, year, cover FROM albums');
+    return rows;
+  }
+
   async getAlbumById(id) {
     const queryAlbum = {
       text: 'SELECT * FROM albums WHERE albums.id = $1',
